@@ -313,7 +313,7 @@ var clipSec     = 4;
 var sensMulti   = 3;  // 1=very high sens, 5=very low
 var noiseFloor  = 0;
 var trigLevel   = 9999;
-var CONSEC_REQ  = 3;   // consecutive frames needed to fire
+var CONSEC_REQ  = 2;   // consecutive frames needed to fire
 var consecCount = 0;
 
 var mediaStream = null;
@@ -353,7 +353,7 @@ function getPeak(){
 async function startCal(){
   try{
     mediaStream = await navigator.mediaDevices.getUserMedia({
-      video:{ facingMode:'environment', width:{ideal:1080}, height:{ideal:1920} },
+      video:{ facingMode:'environment', aspectRatio:{ideal:0.5625} },
       audio:{ echoCancellation:false, noiseSuppression:false, autoGainControl:false }
     });
     document.getElementById('vp').srcObject = mediaStream;
@@ -405,7 +405,7 @@ async function startCal(){
 
 function updateTrigFromNoise(){
   // sensMulti 1=very sensitive (low multiplier), 5=not sensitive (high multiplier)
-  var multi = [2.2, 2.8, 3.5, 4.5, 6.0][sensMulti-1];
+  var multi = [1.1, 1.4, 1.75, 2.25, 3.0][sensMulti-1];
   trigLevel = Math.round(noiseFloor * multi);
   trigLevel = Math.max(trigLevel, 8);
   document.getElementById('trlabel').textContent = 'Trigger: '+trigLevel;
